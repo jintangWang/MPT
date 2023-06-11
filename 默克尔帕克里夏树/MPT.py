@@ -21,6 +21,7 @@ class MerklePatriciaTrie:
         else:
             return keccak_hash(self._root)
 
+    #  根据给定的编码键获取对应的值
     def get(self, encoded_key):
         if not self._root:
             raise KeyError
@@ -30,6 +31,7 @@ class MerklePatriciaTrie:
         result_node = self._get(self._root, path)
         return result_node.data
 
+    # 更新 MPT 中给定编码键的值
     def update(self, encoded_key, encoded_value):
         if self._secure:
             encoded_key = keccak_hash(encoded_key)
@@ -53,6 +55,7 @@ class MerklePatriciaTrie:
             _, new_root = info
             self._root = new_root
 
+    # 获取指定节点引用对应的节点对象
     def _get_node(self, node_ref):
         raw_node = None
         if len(node_ref) == 32:
@@ -61,6 +64,7 @@ class MerklePatriciaTrie:
             raw_node = node_ref
         return Node.decode(raw_node)
 
+    # 递归地在 MPT 中查找给定路径的节点
     def _get(self, node_ref, path):
         node = self._get_node(node_ref)
         if len(path) == 0:
@@ -83,6 +87,7 @@ class MerklePatriciaTrie:
         print('not exist in a new mpt.')
         raise KeyError
 
+    # 递归地更新 MPT 中给定路径的节点值
     def _update(self, node_ref, path, value):
         if not node_ref:
             return self._store_node(Node.Leaf(path, value))
@@ -132,6 +137,7 @@ class MerklePatriciaTrie:
 
             return self._store_node(node)
 
+    # 创建分支节点
     def _create_branch_node(self, path_a, value_a, path_b, value_b):
         assert len(path_a) != 0 or len(path_b) != 0
 
@@ -148,6 +154,7 @@ class MerklePatriciaTrie:
 
         return self._store_node(Node.Branch(branches, branch_value))
 
+    # 创建叶子节点，并将其添加到分支节点的对应位置
     def _create_branch_leaf(self, path, value, branches):
         if len(path) > 0:
             idx = path.at(0)
@@ -155,6 +162,7 @@ class MerklePatriciaTrie:
             leaf_ref = self._store_node(Node.Leaf(path.consume(1), value))
             branches[idx] = leaf_ref
 
+    # 创建扩展节点，并将其添加到分支节点的对应位置
     def _create_branch_extension(self, path, next_ref, branches):
         assert len(path) >= 1
         if len(path) == 1:
@@ -175,6 +183,7 @@ class MerklePatriciaTrie:
         UPDATED = 2,
         USELESS_BRANCH = 3
 
+    # 递归地删除 MPT 中给定路径的节点
     def _delete(self, node_ref, path):
         node = self._get_node(node_ref)
         if type(node) == Node.Leaf:
@@ -260,6 +269,7 @@ class MerklePatriciaTrie:
                 reference = self._store_node(node)
                 return MerklePatriciaTrie._DeleteAction.UPDATED, reference
 
+    # 根据最后一个分支节点构建新的节点
     def _build_new_node_from_last_branch(self, branches):
         idx = 0
         for i in range(len(branches)):

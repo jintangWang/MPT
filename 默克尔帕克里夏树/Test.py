@@ -1,4 +1,6 @@
 import MPT
+import graphviz
+from Node import Node
 
 storage = {}
 
@@ -42,3 +44,34 @@ try:
     print(mpt.get(b'boy'))
 except KeyError:
     pass
+
+# print(len(storage))
+# for key, value in storage.items():
+#     print(format(key.hex()), format(value.hex()))
+
+
+def draw_mpt_tree(mpt):
+    dot = graphviz.Digraph()
+    _add_node(dot, mpt.root(), mpt._storage)
+    dot.format = 'png'  # 设置输出格式为PNG，可根据需要修改
+
+    dot.render('mpt_tree')  # 保存为文件，可根据需要修改文件名
+
+
+def _add_node(dot, node_ref, storage):
+    node = mpt._get_node(node_ref)
+    node_label = str(node)
+    dot.node(node_ref, label=node_label)
+
+    if isinstance(node, Node.Branch):
+        for idx, branch_ref in enumerate(node.branches):
+            if branch_ref:
+                dot.edge(node_ref, branch_ref, label=str(idx))
+                _add_node(dot, branch_ref, storage)
+    elif isinstance(node, (Node.Extension, Node.Leaf)):
+        if node.next_ref:
+            dot.edge(node_ref, node.next_ref)
+            _add_node(dot, node.next_ref, storage)
+
+
+draw_mpt_tree(mpt)
