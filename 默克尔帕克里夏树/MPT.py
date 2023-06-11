@@ -44,7 +44,7 @@ class MerklePatriciaTrie:
             encoded_key = keccak_hash(encoded_key)
         path = NibblePath(encoded_key)
         action, info = self._delete(self._root, path)
-        if action == MerklePatriciaTrie._DeleteAction.DELETED: # Trie is empty
+        if action == MerklePatriciaTrie._DeleteAction.DELETED:  # Trie is empty
             self._root = None
         elif action == MerklePatriciaTrie._DeleteAction.UPDATED:
             new_root = info
@@ -156,7 +156,7 @@ class MerklePatriciaTrie:
             branches[idx] = leaf_ref
 
     def _create_branch_extension(self, path, next_ref, branches):
-        assert len(path) >= 1, 
+        assert len(path) >= 1
         if len(path) == 1:
             branches[path.at(0)] = next_ref
         else:

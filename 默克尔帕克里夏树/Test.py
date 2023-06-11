@@ -13,13 +13,13 @@ mpt.update(b'boat', b'ship')
 mpt.update(b'girl', b'woman')
 
 # 3. get() 查询节点
-print('boat:    ',mpt.get(b'boat'))
+print('boat:    ', mpt.get(b'boat'))
 
 # 4. update() 更新节点
 mpt.update(b'boat', b'Ship')
 
 # 5. get() 查询节点
-print('new boat:    ',mpt.get(b'boat'))
+print('new boat:    ', mpt.get(b'boat'))
 
 # 6. root() 返回根节点
 root1 = mpt.root()
@@ -34,7 +34,7 @@ print("Root hash is     {}".format(root1hash.hex()))
 print("New root hash is {}".format(mpt.root_hash().hex()))
 
 # 9. init() 从旧mpt的根节点提取旧mpt 
-mpt1 = MPT.MerklePatriciaTrie(storage, root = root1)
+mpt1 = MPT.MerklePatriciaTrie(storage, root=root1)
 
 print('in old mpt, boy:    ', mpt1.get(b'boy'))
 print('in newest mpt, boy: ', end='')
@@ -42,9 +42,3 @@ try:
     print(mpt.get(b'boy'))
 except KeyError:
     pass
-     #print('not exist in a new mpt.')
-
-
-
-
-

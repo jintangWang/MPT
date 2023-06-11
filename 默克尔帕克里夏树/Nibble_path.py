@@ -63,7 +63,7 @@ class NibblePath:
         return self
 
     def _create_new(path, length):
-        bytes_len = (length + 1) / 2
+        # bytes_len = (length + 1) / 2
         data = []
 
         is_odd_len = length % 2 == 1
@@ -129,4 +129,3 @@ class NibblePath:
     def combine(self, other):
         chained = NibblePath._Chained(self, other)
         return NibblePath._create_new(chained, len(chained))
-
